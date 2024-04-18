@@ -1,11 +1,11 @@
-`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\Common\COMMON_FILES.v"
-`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\Mem\MEM_FILES.v"
-`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv" 
+// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\COMMON_FILES.v"
+// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\MEM_FILES.v"
+// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv" 
 
 
 module MEM (
-    input [WIDTH-1:0]   i_Address,
-    input [WIDTH-1:0]   i_WriteData,
+    input [31:0]   i_Address,
+    input [31:0]   i_WriteData,
     input [1      :0]   i_BranchOp,
 
     input               i_negative,
@@ -17,16 +17,15 @@ module MEM (
 
     output              o_PCSrc,
 
-    output[WIDTH-1:0]   o_ReadData,
-    output[WIDTH-1:0]   o_Mux
+    output[31:0]   o_ReadData,
+    output[31:0]   o_Mux
 );
 
 //Señales internas
-wire [WIDTH-1:0]    a_slt_data;
+wire [31:0]    a_slt_data;
 
     
-BRANCH
-    u_BRANCH
+BRANCH u_BRANCH
     (
         .i_zero(i_zero),
         .i_neg(i_negative),
@@ -36,8 +35,7 @@ BRANCH
         .o_slt_data(a_slt_data)
     );
 
-MEM_DATA
-    U_MEM_DATA
+MEM_DATA U_MEM_DATA
     (
         .i_memwrite(i_MemWrite),
         .i_memread(i_MemRead),
@@ -46,8 +44,7 @@ MEM_DATA
         .o_read_data(o_ReadData)
     );
 
-MUX32
-    u_MUX32
+MUX32 u_MUX32
     (
         .A(a_slt_data),
         .B(i_Address),

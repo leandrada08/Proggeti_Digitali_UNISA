@@ -1,22 +1,21 @@
 
 
-`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\Id\ID_FILES.v"
-`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\Common\COMMON_FILES.v"
-`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv"
+// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\ID_FILES.v"
+// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\COMMON_FILES.v"
+//`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv"
 
 
 
 module ID (
-
     input               i_clk,
-    input [WIDTH-1:0]   i_instruccion,
-    input [WIDTH-1:0]   i_WriteData,
+    input [31:0]   i_instruccion,
+    input [31:0]   i_WriteData,
     input               i_RegWrite,
     output[4      :0]   i_WriteReg,
 
-    output[WIDTH-1:0]   o_register1,
-    output[WIDTH-1:0]   o_register2,
-    output[WIDTH-1:0]   o_constante,
+    output[31:0]   o_register1,
+    output[31:0]   o_register2,
+    output[31:0]   o_constante,
     output[4      :0]   o_WriteReg,
 
     output              o_RegWrite,
@@ -48,21 +47,19 @@ wire [6 : 0]    a_op_code;
 
 wire [1 : 0]     a_ALUOp;
 
-assign a_rs1 = instruccion[rs1];
-assign a_rs2 = instruccion[rs2];
+assign a_rs1 = i_instruccion[19:15];
+assign a_rs2 = i_instruccion[24:20];
 
     
 
 
-GENERADOR_CONSTANTE
-    u_GENERADOR_CONSTANTE
+GENERADOR_CONSTANTE u_GENERADOR_CONSTANTE
     (
         .instruccion(instruccion),
         .constante(o_constante)
     );
 
-REGISTERS
-    u_REGISTERS
+REGISTERS u_REGISTERS
     (
         .clk(i_clk),
         .RA(a_rs1),
@@ -86,8 +83,7 @@ REGISTERS
 //     .busB(o_v_register2)
 // )
 
-CONTROL
-    u_CONTROL
+CONTROL u_CONTROL
     (
         .opcode(a_op_code),
         .RegWrite(o_RegWrite),
@@ -99,18 +95,17 @@ CONTROL
         .ALUop(a_ALUOp)
     );
 
-ALU_CONTROL
-    u_ALU_CONTROL
+ALU_CONTROL u_ALU_CONTROL
     (
         .ALUop(a_ALUOp),
-        .funct3(i_instruccion[func3]),
-        .funct7(i_instruccion[func7]),
+        .funct3(i_instruccion[14:12]),
+        .funct7(i_instruccion[31:25]),
         .ALUControl(o_ALUControl),
         .BranchOp(o_BranchOp),
         .SLTc(o_SLTc)
     );
 
-assign o_WriteReg = instruccion[rd];
+assign o_WriteReg = i_instruccion[11:7];
 
 
 endmodule
