@@ -1,14 +1,11 @@
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\EX_FILES.v"
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\COMMON_FILES.v"
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv"
-
+`include "RISCV.sv"
 
 module EX
 (
-    input [31:0]   i_PC,
-    input [31:0]   i_register1,
-    input [31:0]   i_register2,
-    input [31:0]   i_constante,
+    input [`WIDTH-1:0]   i_PC,
+    input [`WIDTH-1:0]   i_register1,
+    input [`WIDTH-1:0]   i_register2,
+    input [`WIDTH-1:0]   i_constante,
 
     input               i_SLTc,
     input               i_ALUSrc,
@@ -16,8 +13,8 @@ module EX
 
 
 
-    output[31:0]   o_ALUResult,
-    output[31:0]   o_PCBranch,
+    output[`WIDTH-1:0]   o_ALUResult,
+    output[`WIDTH-1:0]   o_PCBranch,
     output              o_zero,
     output              o_negative
 
@@ -25,17 +22,11 @@ module EX
 
 // Señales aux
 
-wire [31:0]        a_out_mux;
+wire [`WIDTH-1:0]        a_out_mux;
 
-ALU u_ALU (
-        .A(i_register1),
-        .B(a_out_mux),
-        .ALU_Sel(i_ALUControl),
-        .ALU_Out(o_ALUResult),
-        .Zero(o_zero)
-    );
+ALU u_ALU(i_register1,a_out_mux,i_ALUControl,o_ALUResult,o_zero,o_negative);
 
-ADD u_ADD (
+ADD u_ADD(
         .A(i_PC),
         .B(i_constante),
         .C(o_PCBranch)

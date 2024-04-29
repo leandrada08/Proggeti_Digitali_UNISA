@@ -1,29 +1,30 @@
-module ALU (
-input wire [31:0] A, // Primer operando
-input wire [31:0] B, // Segundo operando
-input wire [3:0] ALU_Sel, // Código de operación
-output reg [31:0] ALU_Out, // Resultado de la ALU
-output reg Zero // Indicador de resultado cero
+module ALU(
+input  [31:0]   A, // Primer operando
+input  [31:0]   B, // Segundo operando
+input  [2:0]    ALU_Sel, // Código de operación
+output [31:0]   ALU_Out, // Resultado de la ALU
+output          Zero, // Indicador de resultado cero
+output          Negativo
 );
 
+assign ALU_Out =    (ALU_Sel==3'b000)?suma(A,B):
+                    (ALU_Sel==3'b001)?resta(A,B):
+                    (ALU_Sel==3'b010)?desplazamiento_izquierda(A,B):
+                    (ALU_Sel==3'b011)?resta_unsigned(A,B):
+                    (ALU_Sel==3'b100)?desplazamiento_derecha(A,B):
+                    (ALU_Sel==3'b101)?xor_logico(A,B):
+                    (ALU_Sel==3'b110)?or_logico(A,B):
+                    (ALU_Sel==3'b111)?and_logico(A,B):
+                                      32'b0;
 
 
-always @(*) begin
-    case (ALU_Sel)
-        4'b000: ALU_Out = suma(A, B); // Suma
-        4'b001: ALU_Out = resta(A, B); // Resta
-        4'b010: ALU_Out = desplazamiento_izquierda(A, B); // Desplazamiento lógico a la izquierda
-        4'b011: ALU_Out = resta_unsigned(A, B); //Resta unsigned
-        4'b100: ALU_Out = desplazamiento_derecha(A, B); // Desplazamiento aritmético a la derecha
-        4'b101: ALU_Out = xor_logico(A, B); // XOR
-        4'b110: ALU_Out = or_logico(A, B); // OR
-        4'b111: ALU_Out = and_logico(A, B); // AND
-        default: ALU_Out = 32'd0; // Operación no definida
-    endcase
-    Zero = (ALU_Out == 32'd0) ? 1'b1 : 1'b0; // Establece el indicador Zero si el resultado es cero
-end
+assign Zero = (ALU_Out == 32'd0) ? 1'b1 : 1'b0;
+
+assign Negativo = ALU_Out[31];
 
 endmodule
+
+
 // Función para realizar la suma de dos operandos de 32 bits
 function [31:0] suma(input [31:0] a,input [31:0] b);
     begin
@@ -39,9 +40,9 @@ function [31:0] resta(input [31:0] a,input [31:0] b);
 endfunction
 
 // Función para realizar la resta de dos operandos de 32 bits
-function [31:0] resta(input [31:0] a,input [31:0] b);
+function [31:0] resta_unsigned(input [31:0] a,input [31:0] b);
     begin
-        resta = $unsigned(a) - $unsigned(b);
+        resta_unsigned = $unsigned(a) - $unsigned(b);
     end
 endfunction
 
@@ -57,11 +58,11 @@ endfunction
 // Función para realizar el desplazamiento lógico a la derecha de un operando de 32 bits según el valor de los 5 bits menos significativos del otro operando
 function [31:0] desplazamiento_derecha(input [31:0] a,input [31:0] b);
     begin
-        case (b[31])
-                1'b0:ALU_Out = desplazamiento_derecha_logico(A, B); // Desplazamiento lógico a la derecha
-                1'b1:ALU_Out = desplazamiento_derecha_aritmetico(A, B); // Desplazamiento aritmético a la derecha: 
-            default: 
-        endcase
+        if(b[31]) begin
+            desplazamiento_derecha = desplazamiento_derecha_aritmetico(a, b); // Desplazamiento aritmético a la derecha: 
+        end else begin
+            desplazamiento_derecha = desplazamiento_derecha_logico(a, b); // Desplazamiento lógico a la derecha
+        end
     end
 endfunction
 
@@ -107,11 +108,11 @@ function [31:0] xor_logico(input [31:0] a,input [31:0] b);
 endfunction
 
 // Función para realizar la operación lógica NOT sobre un operando de 32 bits
-function [31:0] not_logico(input [31:0] a);
-    begin
-        not_logico = ~a;
-    end
-endfunction
+// function [31:0] not_logico(input [31:0] a);
+//     begin
+//         not_logico = ~a;
+//     end
+// endfunction
 
 
 

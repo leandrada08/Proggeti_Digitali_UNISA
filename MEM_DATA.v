@@ -1,13 +1,17 @@
+`include "RISCV.sv"
+
+
+
 module MEM_DATA(
     input           i_memwrite,i_memread,
-    input  [31:0]   i_address,
-    input  [31:0]   i_write_data, 
-    output [31:0]   o_read_data
+    input  [`WIDTH-1:0]   i_address,
+    input  [`WIDTH-1:0]   i_write_data, 
+    output [`WIDTH-1:0]   o_read_data
     );
     
 
 
-    reg [31:0] data [32'h3bfff:32'hc00];
+    reg [`WIDTH-1:0] data [32'h3bfff:32'hc00];
 
     integer index;
 

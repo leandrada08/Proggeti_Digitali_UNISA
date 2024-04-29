@@ -1,11 +1,8 @@
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\COMMON_FILES.v"
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\MEM_FILES.v"
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv" 
-
+`include "RISCV.sv"
 
 module MEM (
-    input [31:0]   i_Address,
-    input [31:0]   i_WriteData,
+    input [`WIDTH-1:0]   i_Address,
+    input [`WIDTH-1:0]   i_WriteData,
     input [1      :0]   i_BranchOp,
 
     input               i_negative,
@@ -17,12 +14,12 @@ module MEM (
 
     output              o_PCSrc,
 
-    output[31:0]   o_ReadData,
-    output[31:0]   o_Mux
+    output[`WIDTH-1:0]   o_ReadData,
+    output[`WIDTH-1:0]   o_Mux
 );
 
 //Señales internas
-wire [31:0]    a_slt_data;
+wire [`WIDTH-1:0]    a_slt_data;
 
     
 BRANCH u_BRANCH

@@ -1,8 +1,11 @@
-module vMUX (
-  input wire [255:0] A,
-  input wire [255:0] B,
+`include "RISCV.sv"
+
+
+module MUX32 (
+  input wire [`WIDTH-1:0] A,
+  input wire [`WIDTH-1:0] B,
   input wire select,
-  output reg [255:0] C
+  output reg [`WIDTH-1:0] C
 );
 
   always @ (*) begin

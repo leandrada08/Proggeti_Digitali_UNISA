@@ -1,24 +1,21 @@
-
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\COMMON_FILES.v"
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\IF_FILES.v"
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv" 
+`include "RISCV.sv"
 
 module IF
 (
-    output [31:0] o_address,
-    output [31:0] o_instruccion,
+    output [`WIDTH-1:0] o_address,
+    output [`WIDTH-1:0] o_instruccion,
 
-    input  [31:0] i_branch_address   ,
+    input  [`WIDTH-1:0] i_branch_address   ,
     //input         i_reset,    // Tiene que tener reset
     input         i_select,
     input         i_clock
     );
 
     // Declaro las variables
-    wire [31 : 0]   next_address;
-    wire [31 : 0]   address;
-    wire [31 : 0]   address_4;
-    wire [31 : 0]   instruccion;
+    wire [`WIDTH-1 : 0]   next_address;
+    wire [`WIDTH-1 : 0]   address;
+    wire [`WIDTH-1 : 0]   address_4;
+    wire [`WIDTH-1 : 0]   instruccion;
 
     //Instancio las componentes
     MUX32 u_MUX32
@@ -43,7 +40,7 @@ module IF
             .address(address)
         );
 
-    InstruccionMEM u_InstruccionMEM
+    MEM_INST u_MEM_INST
         (
             .address(address),
             .clock(i_clock),

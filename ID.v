@@ -1,22 +1,18 @@
-
-
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\ID_FILES.v"
-// `include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\COMMON_FILES.v"
-//`include "C:\Users\leand\Documentos\Codigos\DigitaliUNISA\Proggeti_Digitali_UNISA\RISCV.sv"
+`include "RISCV.sv"
 
 
 
 module ID (
     input               i_clk,
-    input [31:0]   i_instruccion,
-    input [31:0]   i_WriteData,
+    input [`WIDTH-1:0]   i_instruccion,
+    input [`WIDTH-1:0]   i_WriteData,
     input               i_RegWrite,
-    output[4      :0]   i_WriteReg,
+    output[`REGADDR]   i_WriteReg,
 
-    output[31:0]   o_register1,
-    output[31:0]   o_register2,
-    output[31:0]   o_constante,
-    output[4      :0]   o_WriteReg,
+    output[`WIDTH-1:0]   o_register1,
+    output[`WIDTH-1:0]   o_register2,
+    output[`WIDTH-1:0]   o_constante,
+    output[`REGADDR]   o_WriteReg,
 
     output              o_RegWrite,
     output              o_ALUSrc,
@@ -38,8 +34,8 @@ module ID (
 );
 
 // Señales auxiliares de instruccion
-wire [4 : 0]    a_rs1;
-wire [4 : 0]    a_rs2;
+wire [`REGADDR]    a_rs1;
+wire [`REGADDR]    a_rs2;
 wire [6 : 0]    a_op_code;
 
 //Señales auxiliar de control
@@ -98,14 +94,14 @@ CONTROL u_CONTROL
 ALU_CONTROL u_ALU_CONTROL
     (
         .ALUop(a_ALUOp),
-        .funct3(i_instruccion[14:12]),
-        .funct7(i_instruccion[31:25]),
+        .funct3(i_instruccion[`func3]),
+        .funct7(i_instruccion[`func7]),
         .ALUControl(o_ALUControl),
         .BranchOp(o_BranchOp),
         .SLTc(o_SLTc)
     );
 
-assign o_WriteReg = i_instruccion[11:7];
+assign o_WriteReg = i_instruccion[`rd];
 
 
 endmodule

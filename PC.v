@@ -1,7 +1,10 @@
+`include "RISCV.sv"
+
+
 module PC (
     input clock, 
-    input [31:0] next_address, 
-    output reg [31:0] address
+    input [`WIDTH-1:0] next_address, 
+    output reg [`WIDTH-1:0] address
     );
 
 always @(posedge clock) begin
